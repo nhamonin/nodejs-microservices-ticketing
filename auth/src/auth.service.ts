@@ -1,8 +1,22 @@
 import { Injectable } from '@nestjs/common';
 
+import { SignUpDto } from './sign-up.dto';
+
 @Injectable()
 export class AuthService {
-  register() {
+  getCurrentUser() {
     return 'Hi there!';
+  }
+
+  signIn() {
+    return 'You are signed in!';
+  }
+
+  signOut() {
+    return 'You are signed out!';
+  }
+
+  signUp(signUpDto: SignUpDto) {
+    return `You are signed up! Your email is ${signUpDto.email}.`;
   }
 }
