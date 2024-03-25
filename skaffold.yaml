@@ -7,8 +7,10 @@ deploy:
 build:
   local:
     push: false
+  googleCloudBuild:
+    projectId: cybernetic-day-276012
   artifacts:
-    - image: nhamonin/microservices-auth
+    - image: us.gcr.io/cybernetic-day-276012/auth
       context: auth
       docker:
         dockerfile: Dockerfile
