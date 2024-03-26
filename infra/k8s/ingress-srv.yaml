@@ -18,3 +18,10 @@ spec:
                 name: auth-srv
                 port:
                   number: 3000
+          - path: /auth_api
+            pathType: Exact
+            backend:
+              service:
+                name: auth-srv
+                port:
+                  number: 3000

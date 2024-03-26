@@ -5,12 +5,10 @@ deploy:
     manifests:
       - ./infra/k8s/*
 build:
-  # local:
-  #   push: false
-  googleCloudBuild:
-    projectId: cybernetic-day-276012
+  local:
+    push: false
   artifacts:
-    - image: us.gcr.io/cybernetic-day-276012/auth
+    - image: nhamonin/microservices-auth
       context: auth
       docker:
         dockerfile: Dockerfile
