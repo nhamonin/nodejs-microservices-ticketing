@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiTags, ApiResponse } from '@nestjs/swagger';
 
 import { AuthService } from './auth.service';
 import { SignUpDto } from './sign-up.dto';
@@ -25,6 +25,15 @@ export class AuthController {
   }
 
   @Post('/sign-up')
+  @ApiResponse({
+    status: 201,
+    description: 'The user has been successfully created.',
+  })
+  @ApiResponse({
+    status: 400,
+    description:
+      'Bad Request. The request body does not contain the required fields, or validation failed.',
+  })
   async signUp(@Body() signUpDto: SignUpDto) {
     return this.authService.signUp(signUpDto);
   }
