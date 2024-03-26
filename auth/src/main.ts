@@ -7,6 +7,7 @@ import { AuthModule } from './auth.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AuthModule);
+  app.setGlobalPrefix('api');
   app.useGlobalPipes(new ValidationPipe());
 
   const config = new DocumentBuilder()
@@ -14,7 +15,7 @@ async function bootstrap() {
     .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('auth_api', app, document);
+  SwaggerModule.setup('api/auth', app, document);
 
   // Initialize the HTTP server
   await app.listen(3000, '0.0.0.0');
