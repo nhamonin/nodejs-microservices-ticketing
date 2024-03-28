@@ -6,15 +6,13 @@ import { Transform } from 'class-transformer';
 export class SignUpDto {
   @ApiProperty({
     example: 'user@example.com',
-    description: 'The email of the user',
   })
-  @IsEmail()
+  @IsEmail({}, { message: 'Invalid email address' })
   @Transform(({ value }) => value.trim().toLowerCase())
   email: string;
 
   @ApiProperty({
-    example: 'change-me',
-    description: 'The password of the user',
+    example: 'password1234',
   })
   @IsNotEmpty()
   @MinLength(8)

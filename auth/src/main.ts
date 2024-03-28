@@ -1,14 +1,16 @@
 import { NestFactory } from '@nestjs/core';
-import { ValidationPipe } from '@nestjs/common';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 import { AuthModule } from './auth.module';
+import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
+import { CustomValidationPipe } from './common/pipes/custom-validation.pipe';
 
 async function bootstrap() {
   const app = await NestFactory.create(AuthModule);
   app.setGlobalPrefix('api');
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(new CustomValidationPipe());
+  app.useGlobalFilters(new AllExceptionsFilter());
 
   const config = new DocumentBuilder()
     .setTitle('Ticketing API')
