@@ -1,8 +1,9 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { All, Body, Controller, Get, Post } from '@nestjs/common';
 import { ApiTags, ApiResponse } from '@nestjs/swagger';
 
 import { AuthService } from './auth.service';
 import { SignUpDto } from './dto/sign-up.dto';
+import { NotFoundError } from './common/errors/NotFound';
 
 @ApiTags('users')
 @Controller('users')
@@ -36,5 +37,10 @@ export class AuthController {
   })
   async signUp(@Body() signUpDto: SignUpDto) {
     return this.authService.signUp(signUpDto);
+  }
+
+  @All('*')
+  notFound() {
+    throw new NotFoundError('Route');
   }
 }

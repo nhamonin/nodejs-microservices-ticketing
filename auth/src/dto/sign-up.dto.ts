@@ -7,7 +7,7 @@ export class SignUpDto {
   @ApiProperty({
     example: 'user@example.com',
   })
-  @IsEmail({}, { message: 'Invalid email address' })
+  @IsEmail({}, { message: 'invalid email address' })
   @Transform(({ value }) => value.trim().toLowerCase())
   email: string;
 
