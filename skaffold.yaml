@@ -1,9 +1,7 @@
-apiVersion: skaffold/v2beta8
+apiVersion: skaffold/v4beta9
 kind: Config
-deploy:
-  kubectl:
-    manifests:
-      - ./infra/k8s/*
+metadata:
+  name: nodejs-microservices-ticketing
 build:
   local:
     push: false
@@ -16,3 +14,14 @@ build:
         manual:
           - src: 'src/**/*'
             dest: .
+  hooks:
+    before:
+      - command:
+        - kubectl
+        - delete
+        - job
+        - prisma-migrate-job
+        - --ignore-not-found
+manifests:
+   rawYaml:
+      - ./infra/k8s/*

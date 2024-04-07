@@ -1,9 +1,9 @@
-import { All, Body, Controller, Get, Post } from '@nestjs/common';
-import { ApiTags, ApiResponse } from '@nestjs/swagger';
+import { All, Body, Controller, Get, Post, HttpStatus } from '@nestjs/common';
+import { ApiTags, ApiResponse, ApiExcludeEndpoint } from '@nestjs/swagger';
 
 import { AuthService } from './auth.service';
 import { SignUpDto } from './dto/sign-up.dto';
-import { NotFoundError } from './common/errors/NotFound';
+import { NotFoundError } from './common/errors/NotFoundError';
 
 @ApiTags('users')
 @Controller('users')
@@ -27,19 +27,24 @@ export class AuthController {
 
   @Post('/sign-up')
   @ApiResponse({
-    status: 201,
-    description: 'The user has been successfully created.',
+    status: HttpStatus.CREATED,
+    description: 'User created successfully.',
   })
   @ApiResponse({
-    status: 400,
+    status: HttpStatus.BAD_REQUEST,
     description:
       'Bad Request. The request body does not contain the required fields, or validation failed.',
+  })
+  @ApiResponse({
+    status: HttpStatus.CONFLICT,
+    description: 'Conflict. A user with the provided email already exists.',
   })
   async signUp(@Body() signUpDto: SignUpDto) {
     return this.authService.signUp(signUpDto);
   }
 
   @All('*')
+  @ApiExcludeEndpoint()
   notFound() {
     throw new NotFoundError('Route');
   }

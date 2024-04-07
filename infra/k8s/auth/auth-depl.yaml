@@ -15,6 +15,9 @@ spec:
       containers:
         - name: auth
           image: nhamonin/microservices-auth
+          envFrom:
+            - secretRef:
+                name: auth-secret
 ---
 apiVersion: v1
 kind: Service

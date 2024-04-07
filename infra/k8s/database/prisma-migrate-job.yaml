@@ -1,0 +1,27 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: prisma-migrate-job
+spec:
+  template:
+    spec:
+      initContainers:
+        - name: check-db
+          image: busybox
+          command:
+            - /bin/sh
+            - -c
+            - >
+              until nc -z -v -w30 auth-db-srv 3306; do
+                echo "Waiting for database connection...";
+                sleep 5;
+              done
+      containers:
+        - name: prisma-migrate
+          image: nhamonin/microservices-auth
+          command: ["npx", "prisma", "db", "push"]
+          envFrom:
+            - secretRef:
+                name: auth-secret
+      restartPolicy: Never
+  backoffLimit: 4
