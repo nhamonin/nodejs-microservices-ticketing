@@ -1,36 +1,48 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import ms from 'ms';
 
 import { SignUpDto } from './dto/sign-up.dto';
 import { PrismaService } from './services/prisma.service';
-import { CustomError } from './common/errors/CustomError';
 import { ConflictError } from './common/errors/ConflictError';
+import { UnauthorizedError } from './common/errors/UnauthorizedError';
+import { SignInDto } from './dto/sign-in.dto';
+import { JwtPayload } from './dto/jwt-payload.dto';
 
 @Injectable()
 export class AuthService {
-  constructor(private prisma: PrismaService) {}
-  private readonly logger = new Logger(AuthService.name);
+  constructor(
+    private prisma: PrismaService,
+    private jwtService: JwtService,
+    private readonly configService: ConfigService,
+  ) {}
 
-  async getCurrentUser() {
-    try {
-      return await this.prisma.user.findMany({
-        select: {
-          id: true,
-          email: true,
-        },
-      });
-    } catch (error) {
-      this.logger.error('Failed to get current user', error);
-      throw new CustomError('Failed to get current user');
+  async getCurrentUser(user: { email: string; id: string }) {
+    return { currentUser: user || null };
+  }
+
+  async signIn(signInDto: SignInDto) {
+    const { email, password } = signInDto;
+
+    const user = await this.prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (!user || !(await bcrypt.compare(password, user.password))) {
+      throw new UnauthorizedError('Invalid credentials');
     }
-  }
 
-  signIn() {
-    return 'You are signed in!';
-  }
+    const payload: JwtPayload = { username: user.email, id: user.id };
+    const accessToken = await this.jwtService.signAsync(payload);
+    const expiresIn = this.configService.get<string>('JWT_EXPIRATION');
 
-  signOut() {
-    return 'You are signed out!';
+    return {
+      user: { email: user.email, id: user.id },
+      accessToken,
+      expiresIn: ms(expiresIn),
+    };
   }
 
   async signUp(signUpDto: SignUpDto) {
@@ -49,22 +61,25 @@ export class AuthService {
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-    try {
-      const user = await this.prisma.user.create({
-        data: {
-          email,
-          password: hashedPassword,
-        },
-        select: {
-          id: true,
-          email: true,
-        },
-      });
+    const user = await this.prisma.user.create({
+      data: {
+        email,
+        password: hashedPassword,
+      },
+      select: {
+        id: true,
+        email: true,
+      },
+    });
 
-      return user;
-    } catch (error) {
-      this.logger.error('Failed to create user', error.stack);
-      throw new CustomError('Failed to create user');
-    }
+    const payload: JwtPayload = { username: user.email, id: user.id };
+    const accessToken = this.jwtService.sign(payload);
+    const expiresIn = this.configService.get<string>('JWT_EXPIRATION');
+
+    return {
+      user: { email: user.email, id: user.id },
+      accessToken,
+      expiresIn: ms(expiresIn),
+    };
   }
 }

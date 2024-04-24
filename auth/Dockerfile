@@ -22,8 +22,8 @@ RUN npx prisma generate
 # Copy the rest of your application's source code
 COPY . .
 
-# Expose the port your app runs on
-EXPOSE 3000
+# Expose the application port and the debug port
+EXPOSE 3000 9229
 
-# Run the application in development mode
-CMD ["pnpm", "run", "start:dev"]
+# Run the application in debug mode
+CMD ["pnpm", "run", "start:debug"]

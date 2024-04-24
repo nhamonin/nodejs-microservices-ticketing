@@ -25,7 +25,7 @@ export class PrismaService
     try {
       await this.$connect();
       this.logger.log('Connected to the database.');
-    } catch (_) {
+    } catch {
       if (attempt < MAX_RETRIES) {
         const delay = INITIAL_RETRY_DELAY * Math.pow(2, attempt);
         this.logger.warn(
@@ -33,9 +33,6 @@ export class PrismaService
         );
         setTimeout(() => this.connectWithRetry(++attempt), delay);
       } else {
-        this.logger.error(
-          'Failed to connect to the database after maximum retries. Please check your database configuration.',
-        );
         process.exit(1);
       }
     }

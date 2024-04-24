@@ -3,12 +3,15 @@ import {
   Catch,
   ExceptionFilter,
   HttpStatus,
+  Logger,
 } from '@nestjs/common';
 
 import { BaseError, SerializedError } from '../errors/BaseError';
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
+  private readonly logger = new Logger(AllExceptionsFilter.name);
+
   catch(exception: unknown, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse();
@@ -19,6 +22,9 @@ export class AllExceptionsFilter implements ExceptionFilter {
     if (exception instanceof BaseError) {
       statusCode = exception.statusCode;
       errors = exception.serializeErrors();
+      this.logger.error(`${exception.constructor.name}: ${exception.message}`);
+    } else if (exception instanceof Error) {
+      this.logger.error(exception.message, exception.stack);
     }
 
     response.status(statusCode).json({

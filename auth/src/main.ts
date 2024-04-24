@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import * as morgan from 'morgan';
+import cookieParser from 'cookie-parser';
+import morgan from 'morgan';
 
 import { AuthModule } from './auth.module';
 import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
@@ -10,6 +11,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AuthModule);
 
   app.setGlobalPrefix('api');
+  app.use(cookieParser());
   app.use(morgan('tiny'));
   app.useGlobalPipes(new CustomValidationPipe());
   app.useGlobalFilters(new AllExceptionsFilter());
