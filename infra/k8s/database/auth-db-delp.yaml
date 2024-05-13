@@ -15,7 +15,7 @@ spec:
       containers:
         - name: auth-db
           image: mysql
-          args: ['--default-authentication-plugin=mysql_native_password']
+          args: ['--mysql-native-password=ON']
           envFrom:
             - secretRef:
                 name: auth-secret
