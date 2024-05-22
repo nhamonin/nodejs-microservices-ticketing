@@ -1,8 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsNotEmpty, MaxLength } from 'class-validator';
 import { Transform } from 'class-transformer';
+import { Prisma } from '@prisma/client';
 
-export class SignInDto {
+export class SignInDto implements Prisma.UserCreateInput {
   @ApiProperty({
     example: 'user@example.com',
   })

@@ -7,8 +7,9 @@ import {
   MaxLength,
 } from 'class-validator';
 import { Transform } from 'class-transformer';
+import { Prisma } from '@prisma/client';
 
-export class SignUpDto {
+export class SignUpDto implements Prisma.UserCreateInput {
   @ApiProperty({
     example: 'user@example.com',
   })
