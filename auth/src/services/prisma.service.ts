@@ -41,4 +41,24 @@ export class PrismaService
   async onModuleDestroy() {
     await this.$disconnect();
   }
+
+  async clearDatabase() {
+    const modelNames = Reflect.ownKeys(this).filter(
+      (key) => typeof this[key] === 'object' && 'deleteMany' in this[key],
+    );
+
+    const deleteOperations = modelNames.map((modelName) => {
+      return this[modelName].deleteMany();
+    });
+
+    try {
+      await this.$transaction(deleteOperations);
+      this.logger.log('All models cleared.');
+    } catch (error) {
+      this.logger.error(
+        'Failed to clear database automatically.',
+        error.message,
+      );
+    }
+  }
 }

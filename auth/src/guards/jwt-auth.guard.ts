@@ -2,7 +2,7 @@ import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Request } from 'express';
 import { JwtService } from '@nestjs/jwt';
 
-import { UnauthorizedError } from 'src/common/errors/UnauthorizedError';
+import { UnauthorizedError } from '../common/errors/UnauthorizedError';
 import { AUTH_COOKIE_NAME } from '../constants';
 
 declare module 'express' {
