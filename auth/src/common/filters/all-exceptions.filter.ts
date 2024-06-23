@@ -22,9 +22,16 @@ export class AllExceptionsFilter implements ExceptionFilter {
     if (exception instanceof BaseError) {
       statusCode = exception.statusCode;
       errors = exception.serializeErrors();
-      this.logger.error(`${exception.constructor.name}: ${exception.message}`);
+
+      if (process.env.NODE_ENV !== 'test') {
+        this.logger.error(
+          `${exception.constructor.name}: ${exception.message}`,
+        );
+      }
     } else if (exception instanceof Error) {
-      this.logger.error(exception.message, exception.stack);
+      if (process.env.NODE_ENV !== 'test') {
+        this.logger.error(exception.message, exception.stack);
+      }
     }
 
     response.status(statusCode).json({

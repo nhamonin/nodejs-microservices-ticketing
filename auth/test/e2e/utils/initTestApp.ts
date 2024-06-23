@@ -1,10 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import cookieParser from 'cookie-parser';
+
 import * as dotenv from 'dotenv';
 
 import { AuthModule } from '../../../src/auth.module';
+import { configureApp } from '../../../src/main';
 
 dotenv.config({ path: '../../.env' });
 
@@ -19,7 +20,7 @@ export async function initTestApp(): Promise<INestApplication> {
     .compile();
 
   const app = moduleFixture.createNestApplication();
-  app.use(cookieParser());
+  await configureApp(app);
   await app.init();
 
   return app;

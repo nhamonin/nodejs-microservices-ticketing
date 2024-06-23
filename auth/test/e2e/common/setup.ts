@@ -5,12 +5,15 @@ import { clearDatabase } from '../utils/clearDatabase';
 
 let app: INestApplication;
 
-beforeEach(async () => {
+beforeAll(async () => {
   app = await initTestApp();
 });
 
 afterEach(async () => {
   await clearDatabase(app);
+});
+
+afterAll(async () => {
   await app.close();
 });
 

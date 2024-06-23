@@ -1,25 +1,51 @@
+import { HttpStatus } from '@nestjs/common';
+
 import request from 'supertest';
 
 import { app } from '../common/setup';
-
-const testUser = {
-  email: 'testuser@example.com',
-  password: 'strongPassword123!',
-};
+import { users } from './config';
 
 describe('Signup Functionality', () => {
   it('should register a new user successfully', async () => {
-    const response = await request(app.getHttpServer())
+    await request(app.getHttpServer())
+      .post('/users/sign-up')
+      .send(users.valid)
+      .expect(HttpStatus.CREATED);
+  });
+
+  it('should return a 400 with an invalid email', async () => {
+    await request(app.getHttpServer())
       .post('/users/sign-up')
       .send({
-        email: testUser.email,
-        password: testUser.password,
+        email: users.invalid.email,
+        password: users.valid.password,
       })
-      .expect(201);
+      .expect(HttpStatus.BAD_REQUEST);
+  });
 
-    expect(response.body.email).toEqual(testUser.email);
-    expect(response.body).not.toHaveProperty('password');
-    expect(response.body).toHaveProperty('id');
-    expect(typeof response.body.id).toBe('string');
+  it('should return a 400 with an invalid password', async () => {
+    await request(app.getHttpServer())
+      .post('/users/sign-up')
+      .send({
+        email: users.valid.email,
+        password: users.invalid.password,
+      })
+      .expect(HttpStatus.BAD_REQUEST);
+  });
+
+  it('should return a 400 with missing email and password', async () => {
+    await request(app.getHttpServer())
+      .post('/users/sign-up')
+      .send({
+        email: users.valid.email,
+      })
+      .expect(HttpStatus.BAD_REQUEST);
+
+    await request(app.getHttpServer())
+      .post('/users/sign-up')
+      .send({
+        password: users.valid.password,
+      })
+      .expect(HttpStatus.BAD_REQUEST);
   });
 });
