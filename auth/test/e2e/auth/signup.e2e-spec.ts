@@ -60,4 +60,13 @@ describe('Signup Functionality', () => {
       .send(users.valid)
       .expect(HttpStatus.CONFLICT);
   });
+
+  it('sets a cookie after successful registration', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/users/sign-up')
+      .send(users.valid)
+      .expect(HttpStatus.CREATED);
+
+    expect(response.get('Set-Cookie')).toBeDefined();
+  });
 });

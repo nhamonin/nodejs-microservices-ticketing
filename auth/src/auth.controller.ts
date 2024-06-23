@@ -73,6 +73,7 @@ export class AuthController {
     response.status(HttpStatus.OK).cookie(AUTH_COOKIE_NAME, accessToken, {
       httpOnly: true,
       maxAge: expiresIn,
+      secure: process.env.NODE_ENV !== 'test',
       path: '/',
       sameSite: 'strict',
     });
@@ -125,6 +126,7 @@ export class AuthController {
     response.cookie(AUTH_COOKIE_NAME, accessToken, {
       httpOnly: true,
       maxAge: expiresIn,
+      secure: process.env.NODE_ENV !== 'test',
       path: '/',
       sameSite: 'strict',
     });
