@@ -3,9 +3,9 @@ import { HttpStatus } from '@nestjs/common';
 import request from 'supertest';
 
 import { app } from '../common/setup';
-import { users } from './config';
+import { users } from '../common/config';
 
-describe('Signup Functionality', () => {
+describe('Sign up Functionality', () => {
   it('should register a new user successfully', async () => {
     await request(app.getHttpServer())
       .post('/users/sign-up')

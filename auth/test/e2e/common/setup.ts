@@ -9,7 +9,7 @@ beforeAll(async () => {
   app = await initTestApp();
 });
 
-afterEach(async () => {
+beforeEach(async () => {
   await clearDatabase(app);
 });
 
