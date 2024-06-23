@@ -48,4 +48,16 @@ describe('Signup Functionality', () => {
       })
       .expect(HttpStatus.BAD_REQUEST);
   });
+
+  it('disallow duplicate email registration', async () => {
+    await request(app.getHttpServer())
+      .post('/users/sign-up')
+      .send(users.valid)
+      .expect(HttpStatus.CREATED);
+
+    await request(app.getHttpServer())
+      .post('/users/sign-up')
+      .send(users.valid)
+      .expect(HttpStatus.CONFLICT);
+  });
 });
