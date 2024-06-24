@@ -4,16 +4,12 @@ import request from 'supertest';
 
 import { app } from '../common/setup';
 import { generateUser } from '../common/config';
+import { signIn } from '../utils/sign-in';
 
 describe('Current user', () => {
   it('responds with details about the current user', async () => {
     const user = generateUser();
-
-    const authResponse = await request(app.getHttpServer())
-      .post('/users/sign-up')
-      .send(user.valid)
-      .expect(HttpStatus.CREATED);
-    const cookie = authResponse.get('Set-Cookie');
+    const cookie = await signIn(user.valid);
 
     const response = await request(app.getHttpServer())
       .get('/users/current')
@@ -21,5 +17,13 @@ describe('Current user', () => {
       .expect(HttpStatus.OK);
 
     expect(response.body.currentUser.email).toEqual(user.valid.email);
+  });
+
+  it('responds with a 401 if the user is not logged in', async () => {
+    const response = await request(app.getHttpServer())
+      .get('/users/current')
+      .expect(HttpStatus.UNAUTHORIZED);
+
+    expect(response.body.currentUser).toBeUndefined();
   });
 });
