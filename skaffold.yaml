@@ -14,14 +14,22 @@ build:
         manual:
           - src: 'src/**/*'
             dest: .
+    - image: nhamonin/microservices-client
+      context: client
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: 'src/**/*'
+            dest: .
   hooks:
     before:
       - command:
-        - kubectl
-        - delete
-        - job
-        - prisma-migrate-job
-        - --ignore-not-found
+          - kubectl
+          - delete
+          - job
+          - prisma-migrate-job
+          - --ignore-not-found
 manifests:
-   rawYaml:
-      - ./infra/k8s/*
+  rawYaml:
+    - ./infra/k8s/*
