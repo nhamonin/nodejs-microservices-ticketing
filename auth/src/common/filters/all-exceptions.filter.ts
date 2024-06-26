@@ -16,7 +16,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse();
     const request = ctx.getRequest();
-    let errors: SerializedError[] = [{ message: 'Something went wrong' }];
+    let errors: SerializedError[] = [{ message: 'Something went wrong.' }];
     let statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
 
     if (exception instanceof BaseError) {

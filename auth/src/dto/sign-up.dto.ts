@@ -13,7 +13,7 @@ export class SignUpDto implements Prisma.UserCreateInput {
   @ApiProperty({
     example: 'user@example.com',
   })
-  @IsEmail({}, { message: 'invalid email address' })
+  @IsEmail({}, { message: 'Invalid email address.' })
   @Transform(({ value }) => value.trim().toLowerCase())
   email: string;
 

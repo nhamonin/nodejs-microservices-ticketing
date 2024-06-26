@@ -5,7 +5,7 @@ import { BaseError } from './BaseError';
 export class CustomError extends BaseError {
   statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
 
-  constructor(message: string = 'An error occurred') {
+  constructor(message: string = 'An error occurred.') {
     super(message);
 
     Object.setPrototypeOf(this, CustomError.prototype);

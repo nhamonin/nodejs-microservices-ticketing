@@ -7,7 +7,7 @@ export class SignInDto implements Prisma.UserCreateInput {
   @ApiProperty({
     example: 'user@example.com',
   })
-  @IsEmail({}, { message: 'Invalid email address' })
+  @IsEmail({}, { message: 'Invalid email address.' })
   @Transform(({ value }) => value.trim().toLowerCase())
   email: string;
 
