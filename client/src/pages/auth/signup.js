@@ -1,10 +1,16 @@
 import { useState } from 'react';
 
+import { useRequest } from '../../hooks/use-request';
+
 const Signup = () => {
   const [form, setForm] = useState({
     email: '',
     password: '',
-    errors: [],
+  });
+  const { doRequest, errors } = useRequest({
+    url: '/api/users/sign-up',
+    method: 'post',
+    body: form,
   });
 
   const handleChange = (e) => {
@@ -17,28 +23,7 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    setForm({
-      ...form,
-      errors: [],
-    });
-
-    const response = await fetch('/api/users/sign-up', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(form),
-    });
-
-    if (response.ok) {
-      console.log('Success');
-    } else {
-      const payload = await response.json();
-      setForm({
-        ...form,
-        errors: payload.errors,
-      });
-    }
+    await doRequest();
   };
 
   return (
@@ -76,10 +61,10 @@ const Signup = () => {
           />
         </div>
 
-        {form.errors.length > 0 && (
+        {errors.length > 0 && (
           <div className="mb-6 p-3 bg-red-100 text-red-700 rounded-md">
             <ul className='list-disc pl-3'>
-              {form.errors.map(({ message }) => (
+              {errors.map(({ message }) => (
                 <li key={message}>{message}</li>
               ))}
             </ul>
