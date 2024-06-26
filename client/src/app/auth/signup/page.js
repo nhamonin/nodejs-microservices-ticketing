@@ -1,8 +1,12 @@
-import { useState } from 'react';
+'use client';
 
-import { useRequest } from '../../hooks/use-request';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+
+import { useRequest } from '../../../hooks/use-request';
 
 const Signup = () => {
+  const Router = useRouter();
   const [form, setForm] = useState({
     email: '',
     password: '',
@@ -11,6 +15,7 @@ const Signup = () => {
     url: '/api/users/sign-up',
     method: 'post',
     body: form,
+    onSuccess: () => Router.push('/'),
   });
 
   const handleChange = (e) => {
@@ -28,7 +33,10 @@ const Signup = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100 text-gray-700">
-      <form onSubmit={handleSubmit} className="w-full max-w-lg p-8 bg-white rounded-lg shadow-lg">
+      <form
+        onSubmit={handleSubmit}
+        className="w-full max-w-lg p-8 bg-white rounded-lg shadow-lg"
+      >
         <h1 className="text-xl font-semibold text-center mb-6">Sign Up</h1>
 
         <div className="mb-4">
@@ -63,7 +71,7 @@ const Signup = () => {
 
         {errors.length > 0 && (
           <div className="mb-6 p-3 bg-red-100 text-red-700 rounded-md">
-            <ul className='list-disc pl-3'>
+            <ul className="list-disc pl-3">
               {errors.map(({ message }) => (
                 <li key={message}>{message}</li>
               ))}

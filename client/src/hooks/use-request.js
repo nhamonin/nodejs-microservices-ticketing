@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export const useRequest = ({ url, method, body }) => {
+export const useRequest = ({ url, method, body, onSuccess }) => {
   const [errors, setErrors] = useState([]);
 
   const doRequest = async () => {
@@ -17,11 +17,11 @@ export const useRequest = ({ url, method, body }) => {
     const payload = await response.json();
 
     if (response.ok) {
-      return payload;
+      onSuccess?.(payload);
     } else {
       setErrors(payload.errors);
     }
-  }
+  };
 
   return { doRequest, errors };
-}
+};
