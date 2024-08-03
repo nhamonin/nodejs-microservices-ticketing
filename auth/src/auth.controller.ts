@@ -71,7 +71,6 @@ export class AuthController {
       await this.authService.signIn(signInDto);
 
     response.status(HttpStatus.OK).cookie(AUTH_COOKIE_NAME, accessToken, {
-      httpOnly: true,
       maxAge: expiresIn,
       secure: process.env.NODE_ENV !== 'test',
       path: '/',
@@ -84,7 +83,7 @@ export class AuthController {
   @Post('/sign-out')
   @ApiResponse({
     status: HttpStatus.OK,
-    description: 'Successfully signed out and cleared authentication cookie.',
+    description: `Successfully signed out and cleared ${AUTH_COOKIE_NAME} cookie.`,
   })
   @ApiResponse({
     status: HttpStatus.INTERNAL_SERVER_ERROR,
@@ -124,7 +123,6 @@ export class AuthController {
       await this.authService.signUp(signUpDto);
 
     response.cookie(AUTH_COOKIE_NAME, accessToken, {
-      httpOnly: true,
       maxAge: expiresIn,
       secure: process.env.NODE_ENV !== 'test',
       path: '/',

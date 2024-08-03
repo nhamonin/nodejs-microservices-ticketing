@@ -2,19 +2,19 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-
 import { useRequest } from '../../hooks/useRequest';
 import { useAuth } from '@/app/context/AuthContext';
 
-const Signup = () => {
+const Signin = () => {
   const router = useRouter();
   const { signIn } = useAuth();
   const [form, setForm] = useState({
     email: '',
     password: '',
   });
+
   const { doRequest, errors } = useRequest({
-    url: '/api/users/sign-up',
+    url: '/api/users/sign-in',
     method: 'post',
     body: form,
     onSuccess: (data) => {
@@ -32,7 +32,6 @@ const Signup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     await doRequest();
   };
 
@@ -41,7 +40,7 @@ const Signup = () => {
       onSubmit={handleSubmit}
       className="w-full max-w-lg p-8 bg-white rounded-lg shadow-lg"
     >
-      <h1 className="text-xl font-semibold text-center mb-6">Sign Up</h1>
+      <h1 className="text-xl font-semibold text-center mb-6">Sign In</h1>
 
       <div className="mb-4">
         <label htmlFor="email" className="block text-sm font-medium mb-2">
@@ -89,10 +88,10 @@ const Signup = () => {
         type="submit"
         className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
       >
-        Sign Up
+        Sign In
       </button>
     </form>
   );
 };
 
-export default Signup;
+export default Signin;
