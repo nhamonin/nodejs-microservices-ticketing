@@ -1,7 +1,6 @@
 'use client';
 
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import Cookies from 'js-cookie';
 
 import { fetchUser } from '../api/fetchUser';
 
@@ -25,13 +24,10 @@ export const AuthProvider = ({ children }) => {
     setUser(userData);
   };
 
-  const signOut = () => {
-    Cookies.remove('Authorization', { path: '/' });
-    setUser(null);
-  };
+  const signOut = () => setUser(null);
 
   return (
-    <AuthContext.Provider value={{ user, loading, signIn, signOut }}>
+    <AuthContext.Provider value={{ user, loading, signOut, signIn }}>
       {children}
     </AuthContext.Provider>
   );

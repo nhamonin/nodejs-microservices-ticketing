@@ -5,14 +5,24 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 import { useAuth } from '../context/AuthContext';
+import { useRequest } from '../hooks/useRequest';
 
 const Header = () => {
-  const { user, loading, signOut } = useAuth();
+  const { user, signOut, loading } = useAuth();
   const router = useRouter();
 
-  const handleSignOut = () => {
-    signOut();
-    router.push('/auth/signin');
+  const { doRequest } = useRequest({
+    url: '/api/users/sign-out',
+    method: 'post',
+    body: {},
+    onSuccess: () => {
+      signOut();
+      router.push('/auth/signin');
+    },
+  });
+
+  const handleSignOut = async () => {
+    await doRequest();
   };
 
   return (
@@ -29,7 +39,7 @@ const Header = () => {
             </div>
             <div className="flex gap-4">
               {loading ? (
-                <li>Loading...</li> // Display a placeholder while loading
+                <li>Loading...</li>
               ) : !user ? (
                 <>
                   <li>

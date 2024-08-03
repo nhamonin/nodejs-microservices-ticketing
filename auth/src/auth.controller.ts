@@ -71,6 +71,7 @@ export class AuthController {
       await this.authService.signIn(signInDto);
 
     response.status(HttpStatus.OK).cookie(AUTH_COOKIE_NAME, accessToken, {
+      httpOnly: true,
       maxAge: expiresIn,
       secure: process.env.NODE_ENV !== 'test',
       path: '/',
@@ -123,6 +124,7 @@ export class AuthController {
       await this.authService.signUp(signUpDto);
 
     response.cookie(AUTH_COOKIE_NAME, accessToken, {
+      httpOnly: true,
       maxAge: expiresIn,
       secure: process.env.NODE_ENV !== 'test',
       path: '/',
