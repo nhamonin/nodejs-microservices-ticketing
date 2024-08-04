@@ -1,10 +1,10 @@
 import { HttpStatus } from '@nestjs/common';
 
 import request from 'supertest';
+import { AUTH_COOKIE_NAME } from '@nh_tickets/common';
 
 import { app } from '../common/setup';
 import { generateUser } from '../common/config';
-import { AUTH_COOKIE_NAME } from '../../../src/constants';
 
 describe('Sign out', () => {
   it('clears the cookie after signing out', async () => {

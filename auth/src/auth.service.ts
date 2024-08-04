@@ -3,11 +3,10 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import ms from 'ms';
+import { ConflictError, UnauthorizedError } from '@nh_tickets/common';
 
 import { SignUpDto } from './dto/sign-up.dto';
 import { PrismaService } from './services/prisma.service';
-import { ConflictError } from './common/errors/ConflictError';
-import { UnauthorizedError } from './common/errors/UnauthorizedError';
 import { SignInDto } from './dto/sign-in.dto';
 import { JwtPayload } from './dto/jwt-payload.dto';
 

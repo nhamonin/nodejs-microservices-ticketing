@@ -4,10 +4,9 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
+import { AllExceptionsFilter, CustomValidationPipe } from '@nh_tickets/common';
 
 import { AuthModule } from './auth.module';
-import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
-import { CustomValidationPipe } from './common/pipes/custom-validation.pipe';
 
 export async function configureApp(app: INestApplication) {
   app.useGlobalPipes(new CustomValidationPipe());

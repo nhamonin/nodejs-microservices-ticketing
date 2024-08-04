@@ -3,9 +3,9 @@ import { PassportStrategy } from '@nestjs/passport';
 import { ConfigService } from '@nestjs/config';
 import { Strategy, ExtractJwt } from 'passport-jwt';
 import { Request } from 'express';
+import { AUTH_COOKIE_NAME } from '@nh_tickets/common';
 
 import { JwtPayload } from '../dto/jwt-payload.dto';
-import { AUTH_COOKIE_NAME } from '../constants';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {

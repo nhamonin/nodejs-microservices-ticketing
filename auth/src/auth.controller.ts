@@ -11,13 +11,13 @@ import {
 } from '@nestjs/common';
 import { ApiTags, ApiResponse, ApiExcludeEndpoint } from '@nestjs/swagger';
 import { Request, Response } from 'express';
+import { AUTH_COOKIE_NAME } from '@nh_tickets/common';
 
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { SignUpDto } from './dto/sign-up.dto';
-import { NotFoundError } from './common/errors/NotFoundError';
+import { NotFoundError } from '@nh_tickets/common';
 import { SignInDto } from './dto/sign-in.dto';
-import { AUTH_COOKIE_NAME } from './constants';
 
 @ApiTags('users')
 @Controller('users')
