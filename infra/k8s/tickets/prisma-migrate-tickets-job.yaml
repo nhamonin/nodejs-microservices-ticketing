@@ -1,0 +1,30 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: prisma-migrate-tickets-job
+spec:
+  template:
+    spec:
+      initContainers:
+        - name: check-tickets-db
+          image: busybox
+          command:
+            - /bin/sh
+            - -c
+            - >
+              until nc -z -v -w30 tickets-db-srv 3306; do
+                echo "Waiting for database connection...";
+                sleep 5;
+              done
+        - name: prisma-migrate-tickets
+          image: nhamonin/microservices-tickets
+          command: ['npx', 'prisma', 'migrate', 'deploy']
+          envFrom:
+            - secretRef:
+                name: tickets-secret
+      containers:
+        - name: placeholder
+          image: busybox
+          command: ['sh', '-c', "echo 'Migration completed'; sleep 3600"]
+      restartPolicy: Never
+  backoffLimit: 4

@@ -14,6 +14,14 @@ build:
         manual:
           - src: 'src/**/*'
             dest: .
+    - image: nhamonin/microservices-tickets
+      context: tickets
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: 'src/**/*'
+            dest: .
     - image: nhamonin/microservices-client
       context: client
       docker:
@@ -28,7 +36,13 @@ build:
           - kubectl
           - delete
           - job
-          - prisma-migrate-job
+          - prisma-migrate-auth-job
+          - --ignore-not-found
+      - command:
+          - kubectl
+          - delete
+          - job
+          - prisma-migrate-tickets-job
           - --ignore-not-found
 manifests:
   rawYaml:

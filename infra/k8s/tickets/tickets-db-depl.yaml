@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tickets-db-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tickets-db
+  template:
+    metadata:
+      labels:
+        app: tickets-db
+    spec:
+      containers:
+        - name: tickets-db
+          image: mysql
+          envFrom:
+            - secretRef:
+                name: tickets-secret
+          ports:
+            - containerPort: 3306
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tickets-db-srv
+spec:
+  selector:
+    app: tickets-db
+  ports:
+    - name: db
+      protocol: TCP
+      port: 3306
+      targetPort: 3306
