@@ -18,6 +18,8 @@ spec:
           envFrom:
             - secretRef:
                 name: auth-secret
+            - secretRef:
+                name: jwt-secret
 ---
 apiVersion: v1
 kind: Service
