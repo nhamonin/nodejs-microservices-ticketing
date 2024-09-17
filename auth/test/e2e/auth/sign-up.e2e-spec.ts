@@ -8,14 +8,14 @@ import { generateUser } from '../common/config';
 describe('Sign up', () => {
   it('should register a new user successfully', async () => {
     await request(app.getHttpServer())
-      .post('/users/sign-up')
+      .post('/api/users/sign-up')
       .send(generateUser().valid)
       .expect(HttpStatus.CREATED);
   });
 
   it('should return a 400 with an invalid email', async () => {
     await request(app.getHttpServer())
-      .post('/users/sign-up')
+      .post('/api/users/sign-up')
       .send({
         email: generateUser().invalid.email,
         password: generateUser().valid.password,
@@ -25,7 +25,7 @@ describe('Sign up', () => {
 
   it('should return a 400 with an invalid password', async () => {
     await request(app.getHttpServer())
-      .post('/users/sign-up')
+      .post('/api/users/sign-up')
       .send({
         email: generateUser().valid.email,
         password: generateUser().invalid.password,
@@ -35,14 +35,14 @@ describe('Sign up', () => {
 
   it('should return a 400 with missing email and password', async () => {
     await request(app.getHttpServer())
-      .post('/users/sign-up')
+      .post('/api/users/sign-up')
       .send({
         email: generateUser().valid.email,
       })
       .expect(HttpStatus.BAD_REQUEST);
 
     await request(app.getHttpServer())
-      .post('/users/sign-up')
+      .post('/api/users/sign-up')
       .send({
         password: generateUser().valid.password,
       })
@@ -53,19 +53,19 @@ describe('Sign up', () => {
     const user = generateUser();
 
     await request(app.getHttpServer())
-      .post('/users/sign-up')
+      .post('/api/users/sign-up')
       .send(user.valid)
       .expect(HttpStatus.CREATED);
 
     await request(app.getHttpServer())
-      .post('/users/sign-up')
+      .post('/api/users/sign-up')
       .send(user.valid)
       .expect(HttpStatus.CONFLICT);
   });
 
   it('sets a cookie after successful registration', async () => {
     const response = await request(app.getHttpServer())
-      .post('/users/sign-up')
+      .post('/api/users/sign-up')
       .send(generateUser().valid)
       .expect(HttpStatus.CREATED);
 

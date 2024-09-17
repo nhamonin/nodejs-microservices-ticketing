@@ -8,7 +8,7 @@ import { generateUser } from '../common/config';
 describe('Sign in', () => {
   it('fails when a email that does not exist is supplied', async () => {
     await request(app.getHttpServer())
-      .post('/users/sign-in')
+      .post('/api/users/sign-in')
       .send(generateUser().valid)
       .expect(HttpStatus.UNAUTHORIZED);
   });
@@ -17,12 +17,12 @@ describe('Sign in', () => {
     const user = generateUser();
 
     await request(app.getHttpServer())
-      .post('/users/sign-up')
+      .post('/api/users/sign-up')
       .send(user.valid)
       .expect(HttpStatus.CREATED);
 
     await request(app.getHttpServer())
-      .post('/users/sign-in')
+      .post('/api/users/sign-in')
       .send({
         email: user.valid.email,
         password: user.invalid.password,
@@ -34,12 +34,12 @@ describe('Sign in', () => {
     const user = generateUser();
 
     await request(app.getHttpServer())
-      .post('/users/sign-up')
+      .post('/api/users/sign-up')
       .send(user.valid)
       .expect(HttpStatus.CREATED);
 
     await request(app.getHttpServer())
-      .post('/users/sign-in')
+      .post('/api/users/sign-in')
       .send(user.valid)
       .expect(HttpStatus.OK);
   });
@@ -48,12 +48,12 @@ describe('Sign in', () => {
     const user = generateUser();
 
     await request(app.getHttpServer())
-      .post('/users/sign-up')
+      .post('/api/users/sign-up')
       .send(user.valid)
       .expect(HttpStatus.CREATED);
 
     const response = await request(app.getHttpServer())
-      .post('/users/sign-in')
+      .post('/api/users/sign-in')
       .send(user.valid)
       .expect(HttpStatus.OK);
 

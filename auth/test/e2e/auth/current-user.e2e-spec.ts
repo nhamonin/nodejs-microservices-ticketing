@@ -12,7 +12,7 @@ describe('Current user', () => {
     const cookie = await signIn(user.valid);
 
     const response = await request(app.getHttpServer())
-      .get('/users/current')
+      .get('/api/users/current')
       .set('Cookie', cookie)
       .expect(HttpStatus.OK);
 
@@ -21,7 +21,7 @@ describe('Current user', () => {
 
   it('responds with a 401 if the user is not logged in', async () => {
     const response = await request(app.getHttpServer())
-      .get('/users/current')
+      .get('/api/users/current')
       .expect(HttpStatus.UNAUTHORIZED);
 
     expect(response.body.currentUser).toBeUndefined();

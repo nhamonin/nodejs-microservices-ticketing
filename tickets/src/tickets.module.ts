@@ -4,6 +4,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import * as Joi from 'joi';
 
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { TicketsController } from './tickets.controller';
 import { TicketsService } from './tickets.service';
 import { PrismaService } from './services/prisma.service';
@@ -31,6 +32,6 @@ import { JwtStrategy } from './strategies/jwt.strategy';
     }),
   ],
   controllers: [TicketsController],
-  providers: [TicketsService, PrismaService, JwtStrategy],
+  providers: [TicketsService, PrismaService, JwtStrategy, JwtAuthGuard],
 })
 export class TicketsModule {}

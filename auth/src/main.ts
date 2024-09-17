@@ -4,6 +4,7 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
+
 import { AllExceptionsFilter, CustomValidationPipe } from '@nh_tickets/common';
 
 import { AuthModule } from './auth.module';

@@ -20,6 +20,8 @@ export async function initTestApp(): Promise<INestApplication> {
     .compile();
 
   const app = moduleFixture.createNestApplication();
+
+  app.setGlobalPrefix('api');
   await configureApp(app);
   await app.init();
 

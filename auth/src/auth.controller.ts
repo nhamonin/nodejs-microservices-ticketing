@@ -10,13 +10,14 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags, ApiResponse, ApiExcludeEndpoint } from '@nestjs/swagger';
-import { Request, Response } from 'express';
-import { AUTH_COOKIE_NAME } from '@nh_tickets/common';
 
-import { AuthService } from './auth.service';
+import { Request, Response } from 'express';
+
+import { AUTH_COOKIE_NAME, NotFoundError } from '@nh_tickets/common';
+
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { AuthService } from './auth.service';
 import { SignUpDto } from './dto/sign-up.dto';
-import { NotFoundError } from '@nh_tickets/common';
 import { SignInDto } from './dto/sign-in.dto';
 
 @ApiTags('users')

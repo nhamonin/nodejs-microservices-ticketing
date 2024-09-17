@@ -11,19 +11,19 @@ describe('Sign out', () => {
     const user = generateUser();
 
     await request(app.getHttpServer())
-      .post('/users/sign-up')
+      .post('/api/users/sign-up')
       .send(user.valid)
       .expect(HttpStatus.CREATED);
 
     const response = await request(app.getHttpServer())
-      .post('/users/sign-in')
+      .post('/api/users/sign-in')
       .send(user.valid)
       .expect(HttpStatus.OK);
 
     expect(response.get('Set-Cookie')).toBeDefined();
 
     const signOutResponse = await request(app.getHttpServer())
-      .post('/users/sign-out')
+      .post('/api/users/sign-out')
       .expect(HttpStatus.OK);
 
     expect(signOutResponse.get('Set-Cookie')[0]).toEqual(

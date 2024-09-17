@@ -11,7 +11,7 @@ type User = {
 
 export async function signIn(user: User) {
   const response = await request(app.getHttpServer())
-    .post('/users/sign-up')
+    .post('/api/users/sign-up')
     .send(user)
     .expect(HttpStatus.CREATED);
 
