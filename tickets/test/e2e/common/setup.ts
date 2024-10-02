@@ -9,6 +9,10 @@ beforeAll(async () => {
   app = await initTestApp();
 });
 
+beforeEach(async () => {
+  await clearDatabase(app);
+});
+
 afterAll(async () => {
   await app.close();
   await clearDatabase(app);

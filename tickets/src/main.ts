@@ -22,7 +22,7 @@ async function bootstrap() {
 
   const config = new DocumentBuilder().setTitle('Ticketing API').setVersion('1.0').build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api/tickets', app, document);
+  SwaggerModule.setup('api-docs/tickets', app, document);
 
   await app.listen(3000, '0.0.0.0');
 }
