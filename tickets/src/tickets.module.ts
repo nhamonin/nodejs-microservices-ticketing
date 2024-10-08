@@ -8,6 +8,7 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { TicketsController } from './tickets.controller';
 import { TicketsService } from './tickets.service';
 import { PrismaService } from './services/prisma.service';
+import { RabbitMQService } from './services/rabbitmq.service';
 import { JwtStrategy } from './strategies/jwt.strategy';
 
 @Module({
@@ -32,6 +33,6 @@ import { JwtStrategy } from './strategies/jwt.strategy';
     }),
   ],
   controllers: [TicketsController],
-  providers: [TicketsService, PrismaService, JwtStrategy, JwtAuthGuard],
+  providers: [TicketsService, PrismaService, JwtStrategy, JwtAuthGuard, RabbitMQService],
 })
 export class TicketsModule {}

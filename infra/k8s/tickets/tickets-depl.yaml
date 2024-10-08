@@ -20,6 +20,8 @@ spec:
                 name: tickets-secret
             - secretRef:
                 name: jwt-secret
+            - secretRef:
+                name: rabbitmq-secret
 ---
 apiVersion: v1
 kind: Service

@@ -47,9 +47,9 @@ spec:
                 port:
                   number: 3000
           - path: /rabbit(/|$)(.*)
-            pathType: Prefix
+            pathType: ImplementationSpecific
             backend:
               service:
-                name: rabbitmq
+                name: rabbitmq-srv
                 port:
                   number: 15672

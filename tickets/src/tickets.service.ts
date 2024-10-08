@@ -1,12 +1,18 @@
 import { Injectable } from '@nestjs/common';
 
 import { NotFoundError, ForbiddenError } from '@nh_tickets/common';
+
 import { PrismaService } from './services/prisma.service';
 import { CreateTicketDto } from './dto/create-ticket.dto';
 import { UpdateTicketDto } from './dto/update-ticket.dto';
+import { TicketCreatedProducer } from './events/producers/ticket-created-producer';
+import { RabbitMQService } from './services/rabbitmq.service';
 @Injectable()
 export class TicketsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly rabbitMQService: RabbitMQService
+  ) {}
 
   async getAll() {
     return this.prisma.tickets.findMany();
@@ -27,9 +33,13 @@ export class TicketsService {
   }
 
   async create(data: CreateTicketDto) {
-    return this.prisma.tickets.create({
+    const ticket = await this.prisma.tickets.create({
       data,
     });
+
+    await new TicketCreatedProducer(this.rabbitMQService.getConnection()).publish(ticket);
+
+    return ticket;
   }
 
   async update(id: string, updateTicketDto: UpdateTicketDto, userId: string) {

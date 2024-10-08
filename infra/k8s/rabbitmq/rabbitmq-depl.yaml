@@ -1,9 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: rabbitmq
-  labels:
-    app: rabbitmq
+  name: rabbitmq-depl
 spec:
   replicas: 1
   selector:
@@ -27,19 +25,11 @@ spec:
               value: "guest"
             - name: RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS
               value: '-rabbitmq_management path_prefix "/rabbit"'
-          volumeMounts:
-            - name: rabbitmq-data
-              mountPath: /var/lib/rabbitmq
-      volumes:
-        - name: rabbitmq-data
-          persistentVolumeClaim:
-            claimName: rabbitmq-pvc
-
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: rabbitmq
+  name: rabbitmq-srv
 spec:
   ports:
     - name: amqp
