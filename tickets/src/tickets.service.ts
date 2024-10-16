@@ -6,6 +6,7 @@ import { PrismaService } from './services/prisma.service';
 import { CreateTicketDto } from './dto/create-ticket.dto';
 import { UpdateTicketDto } from './dto/update-ticket.dto';
 import { TicketCreatedProducer } from './events/producers/ticket-created-producer';
+import { TicketUpdatedProducer } from './events/producers/ticket-updated-producer';
 import { RabbitMQService } from './services/rabbitmq.service';
 @Injectable()
 export class TicketsService {
@@ -33,13 +34,15 @@ export class TicketsService {
   }
 
   async create(data: CreateTicketDto) {
-    const ticket = await this.prisma.tickets.create({
-      data,
+    return this.prisma.$transaction(async (prisma) => {
+      const createdTicket = await prisma.tickets.create({
+        data,
+      });
+
+      await new TicketCreatedProducer(this.rabbitMQService.getConnection()).publish(createdTicket);
+
+      return createdTicket;
     });
-
-    await new TicketCreatedProducer(this.rabbitMQService.getConnection()).publish(ticket);
-
-    return ticket;
   }
 
   async update(id: string, updateTicketDto: UpdateTicketDto, userId: string) {
@@ -55,9 +58,17 @@ export class TicketsService {
       throw new ForbiddenError('You are not authorized to update this ticket');
     }
 
-    return this.prisma.tickets.update({
-      where: { id },
-      data: updateTicketDto,
+    const updatedTicket = await this.prisma.$transaction(async (prisma) => {
+      const updatedTicket = await prisma.tickets.update({
+        where: { id },
+        data: updateTicketDto,
+      });
+
+      await new TicketUpdatedProducer(this.rabbitMQService.getConnection()).publish(updatedTicket);
+
+      return updatedTicket;
     });
+
+    return updatedTicket;
   }
 }

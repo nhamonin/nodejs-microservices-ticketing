@@ -6,6 +6,8 @@ import * as dotenv from 'dotenv';
 
 import { TicketsModule } from '../../../src/tickets.module';
 import { configureApp } from '../../../src/main';
+import { RabbitMQService } from '../../../src/services/rabbitmq.service';
+import { MockRabbitMQService } from '../../mocks/mock-rabbitmq.service';
 
 dotenv.config({ path: '../../.env' });
 
@@ -17,6 +19,8 @@ export async function initTestApp(): Promise<INestApplication> {
     .useValue({
       get: jest.fn((key: string) => process.env[key]),
     })
+    .overrideProvider(RabbitMQService)
+    .useValue(MockRabbitMQService)
     .compile();
 
   const app = moduleFixture.createNestApplication();

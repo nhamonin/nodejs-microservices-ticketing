@@ -3,6 +3,7 @@ import request from 'supertest';
 
 import { app } from '../common/setup';
 import { signIn } from '../utils/signIn';
+import { MockRabbitMQService } from '../../mocks/mock-rabbitmq.service';
 
 const cookie = signIn();
 
@@ -88,27 +89,58 @@ describe('Create Ticket', () => {
   it('creates a new ticket with valid input', async () => {
     const server = app.getHttpServer();
 
-  let response = await request(server).get('/api/tickets').send();
+    let response = await request(server).get('/api/tickets').send();
 
-  expect(response.status).toBe(HttpStatus.OK);
-  expect(response.body.length).toBe(0);
+    expect(response.status).toBe(HttpStatus.OK);
+    expect(response.body.length).toBe(0);
 
-  response = await request(server)
-    .post('/api/tickets')
-    .set('Cookie', cookie)
-    .send({
-      title: 'Test',
-      price: '100',
-    });
+    response = await request(server)
+      .post('/api/tickets')
+      .set('Cookie', cookie)
+      .send({
+        title: 'Test',
+        price: '100',
+      });
 
-  expect(response.status).toBe(HttpStatus.CREATED);
+    expect(response.status).toBe(HttpStatus.CREATED);
 
-  response = await request(server).get('/api/tickets').send();
+    response = await request(server).get('/api/tickets').send();
 
-  expect(response.status).toBe(HttpStatus.OK);
-  expect(response.body.length).toBe(1);
-  expect(response.body[0].title).toBe('Test');
-  expect(response.body[0].price).toBe('100');
-  expect(response.body[0].userId).toBe('123e4567-e89b-12d3-a456-426614174000');
+    expect(response.status).toBe(HttpStatus.OK);
+    expect(response.body.length).toBe(1);
+    expect(response.body[0].title).toBe('Test');
+    expect(response.body[0].price).toBe('100');
+    expect(response.body[0].userId).toBe('123e4567-e89b-12d3-a456-426614174000');
+  });
+
+  it('creates a new ticket with valid input and publishes an event', async () => {
+    const server = app.getHttpServer();
+
+    let response = await request(server).get('/api/tickets').send();
+
+    expect(response.status).toBe(HttpStatus.OK);
+    expect(response.body.length).toBe(0);
+
+    response = await request(server)
+      .post('/api/tickets')
+      .set('Cookie', cookie)
+      .send({
+        title: 'Test',
+        price: '100',
+      });
+
+    expect(response.status).toBe(HttpStatus.CREATED);
+
+    response = await request(server).get('/api/tickets').send();
+
+    expect(response.status).toBe(HttpStatus.OK);
+    expect(response.body.length).toBe(1);
+    expect(response.body[0].title).toBe('Test');
+    expect(response.body[0].price).toBe('100');
+    expect(response.body[0].userId).toBe('123e4567-e89b-12d3-a456-426614174000');
+
+    const mockConnection = MockRabbitMQService.getConnection();
+    const mockChannel = await mockConnection.createChannel();
+    expect(mockChannel.publish).toHaveBeenCalled();
   });
 });

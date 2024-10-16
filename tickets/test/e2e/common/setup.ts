@@ -10,6 +10,7 @@ beforeAll(async () => {
 });
 
 beforeEach(async () => {
+  jest.clearAllMocks();
   await clearDatabase(app);
 });
 

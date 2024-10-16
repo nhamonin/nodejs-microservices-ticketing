@@ -25,6 +25,17 @@ export class RabbitMQService implements OnModuleInit, OnModuleDestroy {
     try {
       this.connection = await amqplib.connect(amqpUrl);
       this.logger.log('Connected to RabbitMQ');
+
+      this.connection.on('close', () => {
+        this.logger.error('RabbitMQ connection closed');
+        this.handleConnectionLoss();
+      });
+
+      this.connection.on('error', (error) => {
+        this.logger.error('RabbitMQ connection error', error);
+        this.handleConnectionLoss();
+      });
+
     } catch (error) {
       if (attempt < MAX_RETRIES) {
         const delay = INITIAL_RETRY_DELAY * Math.pow(2, attempt);
@@ -34,14 +45,24 @@ export class RabbitMQService implements OnModuleInit, OnModuleDestroy {
         setTimeout(() => this.connectWithRetry(++attempt), delay);
       } else {
         this.logger.error('Failed to connect to RabbitMQ after maximum retries', error);
-        process.exit(1);
+        this.handleConnectionLoss();
       }
     }
   }
 
+  private handleConnectionLoss() {
+    this.closeConnection();
+
+    process.exit(1);
+  }
+
   async onModuleDestroy() {
+    this.closeConnection();
+  }
+
+  private closeConnection() {
     if (this.connection) {
-      await this.connection.close();
+      this.connection.close();
       this.logger.log('RabbitMQ connection closed');
     }
   }
