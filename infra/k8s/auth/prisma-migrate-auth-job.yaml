@@ -18,13 +18,13 @@ spec:
               done
         - name: prisma-migrate-auth
           image: nhamonin/microservices-auth
-          command: ['npx', 'prisma', 'migrate', 'deploy']
+          command: ['sh', '-c', 'npx prisma migrate deploy && npx prisma db seed']
           envFrom:
             - secretRef:
                 name: auth-secret
       containers:
         - name: placeholder
           image: busybox
-          command: ['sh', '-c', "echo 'Migration completed'; sleep 3600"]
+          command: ['sh', '-c', "echo 'Migration and seeding completed'; sleep 3600"]
       restartPolicy: Never
   backoffLimit: 4
